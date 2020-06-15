@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %} Feedback {% endblock %}
+
+{% block content %}
+
+<h1>Feedback</h1>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    {% for field in form if field.widget.input_type != 'hidden' %}
+
+    <div class="form-group">
+        {{ field.label }}
+        {{ field(class="form-control") }}
+
+        <span>
+            {% if field.errors %}
+            {% for error in field.errors %}
+                <b class="text-danger">{{error}}</b>
+            {% endfor %}
+            {% endif %}
+        </span>
+    </div>
+    {% endfor %}
+    <button class="btn btn-success mt-2" type="submit">Submit Feedback</button>
+</form>
+
+<ul class="mt-3">
+    {% for f in feedback %}
+    <p><em>{{f.title}}</em></p>
+    <li class="mb-4">
+        <b>{{f.user.username}}</b> - {{f.content}}
+        {% if session['username'] == f.username %}
+            <form style='display:inline' action="/logged-in/{{f.id}}" method="POST">
+                <button class="btn btn-sm btn-danger">X</button>
+            </form>
+        {% endif %}
+    </li>
+    {% endfor %}
+
+</ul>
+
+{% endblock %}
